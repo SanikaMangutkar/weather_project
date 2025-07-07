@@ -23,14 +23,16 @@ Includes a clean background image for a smooth user experience.
 
 ### 🧾 Steps to Follow
 
-#### 📁 1. Clone the Repository
+📁 1. Clone the Repository
 
 ```bash
 git clone https://github.com/SanikaMangutkar/weather_project.git
 cd weather_project
 
  ▶️ 2. Run the App and Open in Browser
+
 ```bash
 python app.py
+
 Now open your browser and go to:
 👉 http://127.0.0.1:5000
