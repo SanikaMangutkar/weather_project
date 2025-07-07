@@ -1,0 +1,211 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url("/static/background.jpeg") no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .weather-container {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px 40px;
+      width: 340px;
+      color: #fff;
+      backdrop-filter: blur(12px);
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      animation: fadeInUp 1s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .search-bar {
+      display: flex;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 25px;
+      padding: 5px;
+      margin-bottom: 20px;
+    }
+
+    .search-bar input[type="text"] {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 10px;
+      color: white;
+      outline: none;
+    }
+
+    .search-bar button {
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 10px;
+    }
+
+    .icon {
+      animation: bounce 1.5s infinite;
+      margin-bottom: 10px;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .weather-main {
+      font-size: 36px;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+
+    .feels-like {
+      font-size: 15px;
+      margin-top: 5px;
+      color: #bbdefb;
+    }
+
+    .info {
+      font-size: 14px;
+      margin: 10px 0;
+    }
+
+    .forecast {
+      margin-top: 25px;
+      font-size: 14px;
+    }
+
+    .forecast-day {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 8px 12px;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .forecast-day:hover {
+      transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .forecast-day span {
+      flex: 1;
+    }
+
+    .language {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      color: white;
+      font-size: 14px;
+    }
+
+    select {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      border-radius: 5px;
+      padding: 5px;
+    }
+
+    option {
+      color: black;
+    }
+
+    .location-label {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="language">
+    Change Language:
+    <select id="lang-select" onchange="changeLanguage(this.value)">
+      <option value="en">English</option>
+      <option value="hi">हिन्दी</option>
+      <option value="mr">मराठी</option>
+    </select>
+  </div>
+
+  <div class="weather-container">
+    <form method="POST" class="search-bar">
+      <input type="text" name="city" id="city-input" placeholder="Search City" required>
+      <button type="submit">🔍</button>
+    </form>
+
+    {% if weather %}
+      <img src="https:{{ weather.icon }}" alt="icon" class="icon" width="60">
+      <div class="location-label">📍 {{ weather.city }}</div>
+      <div class="weather-main">{{ weather.temp }}°C</div>
+      <div class="feels-like">Feels Like: {{ weather.feels_like }}°C</div>
+
+      <div class="info">
+        <span id="humidity-label">Humidity</span>: {{ weather.humidity }}% |
+        <span id="wind-label">Wind</span>: {{ weather.wind }} kph
+      </div>
+
+      <div class="forecast">
+        <div id="forecast-label">Forecast for the next 3 days:</div>
+        {% for day in weather.forecast %}
+          <div class="forecast-day">
+            <span>{{ day.date }}</span>
+            <img src="https:{{ day.icon }}" alt="icon" style="width:24px;">
+            <span>{{ day.avg_temp }}°C</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <script>
+    const translations = {
+      en: {
+        search: "Search City",
+        humidity: "Humidity",
+        wind: "Wind",
+        forecast: "Forecast for the next 3 days:"
+      },
+      hi: {
+        search: "शहर खोजें",
+        humidity: "नमी",
+        wind: "पवन",
+        forecast: "अगले 3 दिनों का पूर्वानुमान:"
+      },
+      mr: {
+        search: "शहर शोधा",
+        humidity: "आर्द्रता",
+        wind: "वारा",
+        forecast: "पुढील 3 दिवसांचा अंदाज:"
+      }
+    };
+
+    function changeLanguage(lang) {
+      document.getElementById("city-input").placeholder = translations[lang].search;
+      document.getElementById("humidity-label").textContent = translations[lang].humidity;
+      document.getElementById("wind-label").textContent = translations[lang].wind;
+      document.getElementById("forecast-label").textContent = translations[lang].forecast;
+    }
+  </script>
+</body>
+</html>
